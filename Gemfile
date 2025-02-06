@@ -6,6 +6,11 @@ gem "rails", "~> 7.2.2", ">= 7.2.2.1"
 gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+gem "dry-types"
+gem "dry-initializer"
+gem "dry-struct"
+gem "dry-validation"
+gem "dry-configurable"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
@@ -38,6 +43,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "rspec-rails", "~> 7.0.0"
+  gem "rspec-activemodel-mocks"
+  gem "shoulda-matchers"
+  gem "factory_bot_rails"
 end
 
-
+group :test do
+  gem "faker"
+end
