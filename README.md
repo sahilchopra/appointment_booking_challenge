@@ -90,6 +90,7 @@ all the tests are present in the spec folder. You can run the test cases using t
 https://github.com/sahilchopra/appointment_booking_challenge/tree/main/spec
 - currently we have 24 test cases to validate logic
 ![internal-test.png](public/internal-test.png)
+- Also added github actions to run the test cases on every push to main branch https://github.com/sahilchopra/appointment_booking_challenge/actions/runs/13184502169/job/36803244950
 
 ## How to run External Test Cases
 - download https://enpalcorepgtechiv.blob.core.windows.net/tech-interview/backend/20241028_34f4060c/Take_Home_Challenge_Resources.zip
