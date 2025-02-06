@@ -19,36 +19,32 @@ module AvailabilityService
         language, products, rating
       ).pluck(:id)
 
-      # Step 2: Find all available slots for the given date for the eligible sales managers
-      available_slots = Slot.where(
-        sales_manager_id: sales_manager_ids,
-        booked: false
-      ).where("DATE(start_date) = ?", date)
+      # Step 2: Find available slots, filter out overlapping slots, and group by start_date
+      available_slots = Slot
+                          .where(
+                            sales_manager_id: sales_manager_ids,
+                            booked: false,
+                            start_date: DateTime.parse(date).beginning_of_day..DateTime.parse(date).end_of_day
+                          )
+                          .where.not(
+                            id: Slot
+                                  .joins("INNER JOIN slots AS overlapping_slots ON slots.sales_manager_id = overlapping_slots.sales_manager_id")
+                                  .where("overlapping_slots.booked = TRUE")
+                                  .where("overlapping_slots.start_date < slots.end_date")
+                                  .where("overlapping_slots.end_date > slots.start_date")
+                                  .select("slots.id")
+                          )
+                          .group(:start_date)
+                          .select("start_date, COUNT(id) AS available_count")
 
-      # Step 3: Filter out overlapping slots for each sales manager
-      available_slots = available_slots.includes(:sales_manager).select do |slot|
-        # Check if there's any booked slot overlapping with this available slot
-        overlapping_slot = Slot.where(
-          sales_manager_id: slot.sales_manager_id,
-          booked: true
-        ).where("start_date < ? AND end_date > ?", slot.end_date, slot.start_date).exists?
 
-        !overlapping_slot
-      end
-
-      # Step 4: Calculate available_count by checking all eligible sales managers for each slot
-      available_slots_grouped = available_slots.group_by(&:start_date)
-
-      result = available_slots_grouped.map do |start_date, slots|
-        available_count = slots.count { |slot| slot.sales_manager_id.in?(sales_manager_ids) && !slot.booked }
-
+      # Format the result
+      available_slots.map do |slot|
         {
-          available_count: available_count,
-          start_date: start_date.iso8601(3)
+          available_count: slot.available_count,
+          start_date: slot.start_date.iso8601(3)
         }
       end
-
-      result
     end
   end
 end
