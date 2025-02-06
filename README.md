@@ -66,3 +66,38 @@ database in any way but you can create indexes or views if you think it is neces
 here: https://enpalcorepgtechiv.blob.core.windows.net/tech-interview/backend/20241028_34f4060c/Take_Home_Challenge_
 Resources.zip
 
+
+
+# Installation and Setup
+1. Clone the repository
+2. cd appointment_booking_challenge
+3. Run `docker-compose up --build` to start the application
+   (It will take some time to build the application and start postgres with some seed data)
+
+![docker-container.png](public/docker-container.png)
+
+Make sure you have docker installed on your machine.
+
+## API Endpoints
+1. POST /calendar/query  - This endpoint returns available appointment slots  https://github.com/sahilchopra/appointment_booking_challenge/blob/main/config/routes.rb#L10
+
+## Seed Data
+Seed data is already present in the database. You can check the seed data in the seeds.rb file. https://github.com/sahilchopra/appointment_booking_challenge/blob/main/db/seeds.rb
+
+## Test cases
+all the tests are present in the spec folder. You can run the test cases using the below command
+`docker-compose run web rspec`
+https://github.com/sahilchopra/appointment_booking_challenge/tree/main/spec
+- currently we have 24 test cases to validate logic
+![internal-test.png](public/internal-test.png)
+
+## How to run External Test Cases
+- download https://enpalcorepgtechiv.blob.core.windows.net/tech-interview/backend/20241028_34f4060c/Take_Home_Challenge_Resources.zip
+- Extract the zip file
+- cd test-app folder
+- Run `npm install`
+- Run `npm run test`
+- You will see the output of the test cases
+- please make sure the application is running before running the test cases 
+![external-test.png](public/external-test.png)
+

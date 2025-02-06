@@ -1,0 +1,33 @@
+version: '3'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: user
+      POSTGRES_DB: myapp_production
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  web:
+    build: .
+    command: bash -c "bin/rails db:create && bin/rails db:migrate && bin/rails db:seed && bin/rails server -b '0.0.0.0'"
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgres://user:example@db/myapp_production
+    depends_on:
+      - db
+    volumes:
+      - ".:/rails"
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+
+volumes:
+  db_data:
